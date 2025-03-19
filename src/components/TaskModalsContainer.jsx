@@ -12,20 +12,21 @@ const TaskModalsContainer = ({
 }) => {
     return (
         <>
-            <TaskSelectionModal
-                isOpen={isSelectionModalOpen}
-                closeModal={() => setSelectionModalOpen(false)}
-                onSave={(taskId) => {
-                    if (taskId) {
-                        setTarefas((prevTarefas) =>
-                            prevTarefas.map((tarefa) =>
-                                tarefa.id === selectedTaskId ? { ...tarefa, descricao: taskId } : tarefa
-                            )
-                        );
-                    }
-                    setSelectionModalOpen(false);
-                }}
-            />
+                <TaskSelectionModal
+                    isOpen={isSelectionModalOpen}
+                    closeModal={() => setSelectionModalOpen(false)}
+                    onSave={(taskId, taskDescription) => {
+                        if (taskId) {
+                            setTarefas((prevTarefas) =>
+                                prevTarefas.map((tarefa) =>
+                                    tarefa.id === selectedTaskId ? { ...tarefa, descricao: taskDescription } : tarefa
+                                )
+                            );
+                        }
+                        setSelectionModalOpen(false);
+                    }}
+                />
+
 
             <TaskGroupModal
                 isOpen={isGroupModalOpen}

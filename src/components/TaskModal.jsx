@@ -13,6 +13,8 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
     const [isSelectionModalOpen, setSelectionModalOpen] = useState(false);
     const [isGroupModalOpen, setGroupModalOpen] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState(null);
+    const [selectedObservationTask, setSelectedObservationTask] = useState(null);
+
 
     useEffect(() => {
         if (isOpen) fetchTasks();
@@ -25,6 +27,18 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
         else setTarefas(data);
         setLoading(false);
     }
+
+        // ✅ Função para salvar a observação no estado de tarefas
+        const handleSaveObservation = () => {
+            setTarefas(prevTarefas =>
+                prevTarefas.map(tarefa =>
+                    tarefa.id === selectedObservationTask
+                        ? { ...tarefa, observacoes: observationValue }
+                        : tarefa
+                )
+            );
+            setObservationModalOpen(false);
+        };
 
     // ✅ Adicionar nova tarefa
     async function addTask() {
@@ -61,7 +75,7 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
 
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[800px]">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[1500px]">
                 <h2 className="text-xl font-bold mb-4">Gerenciar Tarefas</h2>
 
                 {/* ✅ Agrupando os botões na mesma linha */}
@@ -88,7 +102,11 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                         setSelectedTaskId(taskId);
                         setSelectionModalOpen(true);
                     }}
-                    openObservationModal={openObservationModal} // ✅ Passando corretamente a função
+                    openObservationModal={(taskId, observacoes) => {
+                        setSelectedTaskForObservation(taskId); // ✅ Define a tarefa correta
+                        setObservationValue(observacoes || ""); // ✅ Preenche o campo com o valor atual ou vazio
+                        setObservationModalOpen(true); // ✅ Abre o modal
+                    }}
                 />
 
                 <div className="flex justify-end gap-2 mt-4">

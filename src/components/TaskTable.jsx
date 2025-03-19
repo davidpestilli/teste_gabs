@@ -56,8 +56,9 @@ const TaskTable = ({ tarefas, loading, updateTask, openObservationModal, selecte
                                     className="border px-4 py-2 cursor-pointer text-blue-500 underline"
                                     onClick={() => openObservationModal(tarefa.id, tarefa.observacoes)}
                                 >
-                                    {tarefa.observacoes ? "Ver observação" : "Adicionar observação"}
+                                    {tarefa.observacoes ? tarefa.observacoes.slice(0, 30) + "..." : "Adicionar observação"}
                                 </td>
+
                             </tr>
                         ))
                     )}

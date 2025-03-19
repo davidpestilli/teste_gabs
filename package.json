@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://davidpestilli.github.io/teste_gabs/",
-
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
     "react": "^19.0.0",

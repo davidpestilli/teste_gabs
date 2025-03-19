@@ -10,14 +10,21 @@ const TaskSelectionModal = ({ isOpen, closeModal, onSave }) => {
     }, [isOpen]);
 
     async function fetchTasks() {
-        const { data, error } = await supabase.from("tasks").select("id, group_id, task");
-        if (error) console.error("Erro ao buscar tarefas:", error);
-        else setTasks(data);
+        const { data, error } = await supabase
+            .from("tasks")
+            .select("id, group_id, task, task_groups(group_name)"); // 🚀 Busca o nome do grupo
+    
+        if (error) {
+            console.error("Erro ao buscar tarefas:", error);
+        } else {
+            setTasks(data);
+        }
     }
+    
 
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[1300px]">   
                 <h2 className="text-xl font-bold mb-4">Selecionar Tarefa</h2>
                 <div className="overflow-y-auto max-h-60">
                     <table className="w-full border-collapse border border-gray-300">
@@ -38,7 +45,7 @@ const TaskSelectionModal = ({ isOpen, closeModal, onSave }) => {
                                             onChange={() => setSelectedTask(task.id)}
                                         />
                                     </td>
-                                    <td className="border px-4 py-2">{task.group_id}</td>
+                                    <td className="border px-4 py-2">{task.task_groups?.group_name || "Sem grupo"}</td>
                                     <td className="border px-4 py-2">{task.task}</td>
                                 </tr>
                             ))}
@@ -50,12 +57,18 @@ const TaskSelectionModal = ({ isOpen, closeModal, onSave }) => {
                         Cancelar
                     </button>
                     <button
-                        onClick={() => onSave(selectedTask)}
+                        onClick={() => {
+                            const selectedTaskObj = tasks.find(task => task.id === selectedTask);
+                            if (selectedTaskObj) {
+                                onSave(selectedTaskObj.id, selectedTaskObj.task); // Agora passa ID e Descrição
+                            }
+                        }}
                         className={`px-4 py-2 rounded ${selectedTask ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-500"}`}
                         disabled={!selectedTask}
                     >
                         Salvar
                     </button>
+
                 </div>
             </div>
         </div>
@@ -86,7 +99,7 @@ const TaskGroupModal = ({ isOpen, closeModal, onSave }) => {
 
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px]">
                 <h2 className="text-xl font-bold mb-4">Gerenciar Grupo de Tarefas</h2>
                 <input
                     type="text"
