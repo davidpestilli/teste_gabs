@@ -1,14 +1,16 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import TaskModal from "./TaskModal";
 
-const TableRow = ({ registro, updateCell }) => {
+const TableRow = ({ registro, updateCell, isSelected, toggleSelection }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [column, setColumn] = useState("");
     const [value, setValue] = useState("");
+    const [isTaskModalOpen, setTaskModalOpen] = useState(false);
 
     const openModal = (colName, currentValue) => {
         setColumn(colName);
-        setValue(currentValue || ""); // Se não houver valor, mantém vazio
+        setValue(currentValue || ""); 
         setModalOpen(true);
     };
 
@@ -18,33 +20,28 @@ const TableRow = ({ registro, updateCell }) => {
     };
 
     return (
-        <tr className="hover:bg-gray-50">
-            <td className="border border-gray-300 px-4 py-2 cursor-pointer" onClick={() => openModal("assessor", registro.assessor)}>
+        <tr className={`hover:bg-gray-50 ${isSelected ? "bg-gray-200" : ""}`}>
+            <td className="border px-4 py-2">
+                <input type="checkbox" checked={isSelected} onChange={toggleSelection} />
+            </td>
+            <td className="border px-4 py-2 cursor-pointer" onClick={() => openModal("assessor", registro.assessor)}>
                 {registro.assessor || "Clique para adicionar"}
             </td>
-            <td className="border border-gray-300 px-4 py-2 cursor-pointer" onClick={() => openModal("gabinete", registro.gabinete)}>
+            <td className="border px-4 py-2 cursor-pointer" onClick={() => openModal("gabinete", registro.gabinete)}>
                 {registro.gabinete || "Clique para adicionar"}
             </td>
-            <td className="border border-gray-300 px-4 py-2 cursor-pointer" onClick={() => openModal("processos", registro.processos)}>
+            <td className="border px-4 py-2 cursor-pointer" onClick={() => openModal("processos", registro.processos)}>
                 {registro.processos || "Clique para adicionar"}
             </td>
-            <td className="border border-gray-300 px-4 py-2">{registro.tarefas}</td>
-            <td className="border border-gray-300 px-4 py-2">
-                <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                >
-                    Editar
-                </button>
+            <td className="border px-4 py-2 cursor-pointer text-blue-500 underline" onClick={() => setTaskModalOpen(true)}>
+                {registro.tarefas ? "Ver tarefas" : "Adicionar tarefas"}
             </td>
 
-            <Modal
-                isOpen={isModalOpen}
-                closeModal={() => setModalOpen(false)}
-                column={column}
-                value={value}
-                setValue={setValue}
-                handleSave={handleSave}
-            />
+            {/* Modal para Assessor, Gabinete e Processos */}
+            <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)} column={column} value={value} setValue={setValue} handleSave={handleSave} />
+
+            {/* Modal para Tarefas */}
+            <TaskModal isOpen={isTaskModalOpen} closeModal={() => setTaskModalOpen(false)} registroId={registro.id} />
         </tr>
     );
 };

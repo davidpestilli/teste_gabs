@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
-import TableFilters from "./TableFilters";
 import TableRow from "./TableRow";
 
 const Table = () => {
     const [dados, setDados] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filtroAssessor, setFiltroAssessor] = useState("");
-    const [filtroGabinete, setFiltroGabinete] = useState("");
+    const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
         carregarDados();
@@ -27,25 +25,52 @@ const Table = () => {
             .update({ [column]: value })
             .eq("id", id);
 
-        if (error) console.error("Erro ao atualizar:", error);
+        if (error) console.error("Erro ao atualizar célula:", error);
         else carregarDados();
     }
 
-    const dadosFiltrados = dados.filter(registro =>
-        registro.assessor?.toLowerCase().includes(filtroAssessor.toLowerCase()) &&
-        registro.gabinete?.toLowerCase().includes(filtroGabinete.toLowerCase())
-    );
+    async function addRow() {
+        const { error } = await supabase
+            .from("registros")
+            .insert([{ assessor: "", gabinete: "", processos: "", tarefas: "" }]);
+
+        if (error) console.error("Erro ao adicionar linha:", error);
+        else carregarDados();
+    }
+
+    async function deleteRows() {
+        if (selectedRows.length === 0) return;
+
+        const { error } = await supabase
+            .from("registros")
+            .delete()
+            .in("id", selectedRows);
+
+        if (error) console.error("Erro ao excluir linhas:", error);
+        else {
+            setSelectedRows([]);
+            carregarDados();
+        }
+    }
+
+    const handleRowSelection = (id) => {
+        setSelectedRows((prev) =>
+            prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+        );
+    };
 
     return (
         <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">Registros de Usuários</h2>
+            <h2 className="text-2xl font-bold mb-4">Testes pelos Gabinetes</h2>
 
-            <TableFilters
-                filtroAssessor={filtroAssessor}
-                setFiltroAssessor={setFiltroAssessor}
-                filtroGabinete={filtroGabinete}
-                setFiltroGabinete={setFiltroGabinete}
-            />
+            <div className="flex gap-4 mb-4">
+                <button onClick={addRow} className="bg-green-500 text-white px-4 py-2 rounded">
+                    Adicionar Linha
+                </button>
+                <button onClick={deleteRows} className="bg-red-500 text-white px-4 py-2 rounded" disabled={selectedRows.length === 0}>
+                    Excluir Selecionados
+                </button>
+            </div>
 
             {loading ? (
                 <p className="text-center">Carregando...</p>
@@ -54,16 +79,22 @@ const Table = () => {
                     <table className="w-full border-collapse border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="border border-gray-300 px-4 py-2">Assessor</th>
-                                <th className="border border-gray-300 px-4 py-2">Gabinete de Lotação</th>
-                                <th className="border border-gray-300 px-4 py-2">Processos</th>
-                                <th className="border border-gray-300 px-4 py-2">Tarefas</th>
-                                <th className="border border-gray-300 px-4 py-2">Ações</th>
+                                <th className="border px-4 py-2">Selecionar</th>
+                                <th className="border px-4 py-2">Assessor</th>
+                                <th className="border px-4 py-2">Gabinete de Lotação</th>
+                                <th className="border px-4 py-2">Processos</th>
+                                <th className="border px-4 py-2">Tarefas</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {dadosFiltrados.map((registro) => (
-                                <TableRow key={registro.id} registro={registro} updateCell={updateCell} />
+                            {dados.map((registro) => (
+                                <TableRow
+                                    key={registro.id}
+                                    registro={registro}
+                                    updateCell={updateCell}  // 🔹 Passando a função corretamente
+                                    isSelected={selectedRows.includes(registro.id)}
+                                    toggleSelection={() => handleRowSelection(registro.id)}
+                                />
                             ))}
                         </tbody>
                     </table>
