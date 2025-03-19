@@ -3,6 +3,7 @@ import { supabase } from "../services/supabaseClient";
 import TableRow from "./TableRow";
 import TaskActions from "./TaskActions";
 import ReportModal from "./ReportModal"; // 🔹 Agora importamos o modal separado
+import TaskModal from "./TaskModal";
 
 const Table = () => {
     const [dados, setDados] = useState([]);
@@ -45,14 +46,24 @@ const Table = () => {
         );
     };
 
+    const [isTaskModalOpen, setTaskModalOpen] = useState(false);
+    const [currentTaskRegistroId, setCurrentTaskRegistroId] = useState(null);
+    
+    const openTaskModal = (registroId) => {
+        setCurrentTaskRegistroId(registroId);
+        setTaskModalOpen(true);
+    };
+    
+
     return (
         <div className="container mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4">Testes pelos Gabinetes</h2>
+
             <TaskActions 
                 addTask={addRow} 
                 deleteSelectedTasks={deleteRows} 
                 selectedTasks={selectedRows} 
-                openReportModal={() => setReportModalOpen(true)} 
+                setReportModalOpen={setReportModalOpen} 
             />
 
             {loading ? (
@@ -77,15 +88,32 @@ const Table = () => {
                                     updateCell={() => {}}
                                     isSelected={selectedRows.includes(registro.id)}
                                     toggleSelection={() => handleRowSelection(registro.id)}
+                                    openTaskModal={() => openTaskModal(registro.id)} // ✅ Agora está passando corretamente a função
                                 />
                             ))}
                         </tbody>
                     </table>
+
+                        <TaskModal 
+                            isOpen={isTaskModalOpen} 
+                            closeModal={() => setTaskModalOpen(false)} 
+                            registroId={currentTaskRegistroId} 
+                        />
+
                 </div>
             )}
 
             {/* 🔹 Modal separado para relatórios */}
-            <ReportModal isOpen={isReportModalOpen} closeModal={() => setReportModalOpen(false)} />
+            {isReportModalOpen && (
+    <ReportModal 
+        isOpen={true} 
+        closeModal={() => {
+            console.log("Fechando modal de relatório...");
+            setReportModalOpen(false);
+        }} 
+    />
+)}
+
         </div>
     );
 };

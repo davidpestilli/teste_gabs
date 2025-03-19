@@ -1,4 +1,4 @@
-const TaskActions = ({ addTask, deleteSelectedTasks, selectedTasks, openReportModal }) => {
+const TaskActions = ({ addTask, deleteSelectedTasks, selectedTasks, setReportModalOpen }) => {
     return (
         <div className="flex gap-4 mb-4">
             <button onClick={addTask} className="bg-green-500 text-white px-4 py-2 rounded">
@@ -12,7 +12,10 @@ const TaskActions = ({ addTask, deleteSelectedTasks, selectedTasks, openReportMo
                 Excluir Selecionados
             </button>
             <button
-                onClick={openReportModal} // 🔹 Certifique-se de que essa função está sendo passada
+                onClick={() => {
+                    console.log("Abrindo modal de relatório...");
+                    setReportModalOpen(true);
+                }}
                 className="bg-blue-500 text-white px-4 py-2 rounded"
             >
                 Relatório

@@ -1,18 +1,19 @@
 import TaskTable from "./TaskTable";
 
-const TaskTableDisplay = ({ tarefas, loading, selectedTasks, setSelectedTasks, onTaskClick }) => {
+const TaskTableDisplay = ({ tarefas, loading, selectedTasks, setSelectedTasks, onTaskClick, openObservationModal }) => {
     return (
         <TaskTable
             tarefas={tarefas}
             loading={loading}
             updateTask={() => {}}
-            openObservationModal={() => {}}
+            openObservationModal={openObservationModal} // ✅ Agora está pegando a função corretamente
             selectedTasks={selectedTasks}
             setSelectedTasks={setSelectedTasks}
-            onTaskClick={onTaskClick}  // ✅ Passando corretamente para TaskTable.jsx
+            onTaskClick={onTaskClick}
         />
     );
 };
 
 export default TaskTableDisplay;
+
 

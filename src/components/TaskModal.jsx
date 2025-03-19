@@ -3,6 +3,8 @@ import { supabase } from "../services/supabaseClient";
 import TaskTableDisplay from "./TaskTableDisplay";
 import TaskManagementActions from "./TaskManagementActions"; // ✅ Importando corretamente
 import TaskModalsContainer from "./TaskModalsContainer";
+import TaskObservationModal from "./TaskObservationModal"; // ✅ Importando o modal de observação
+
 
 const TaskModal = ({ isOpen, closeModal, registroId }) => {
     const [tarefas, setTarefas] = useState([]);
@@ -46,6 +48,17 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
         }
     }
 
+    const [isObservationModalOpen, setObservationModalOpen] = useState(false);
+    const [observationValue, setObservationValue] = useState("");
+    const [selectedTaskForObservation, setSelectedTaskForObservation] = useState(null);
+
+    const openObservationModal = (taskId, currentObservations) => {
+        setSelectedTaskForObservation(taskId);
+        setObservationValue(currentObservations || "");
+        setObservationModalOpen(true);
+    };
+
+
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[800px]">
@@ -75,6 +88,7 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                         setSelectedTaskId(taskId);
                         setSelectionModalOpen(true);
                     }}
+                    openObservationModal={openObservationModal} // ✅ Passando corretamente a função
                 />
 
                 <div className="flex justify-end gap-2 mt-4">
@@ -82,6 +96,22 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                         Fechar
                     </button>
                 </div>
+
+                <TaskObservationModal
+                    isOpen={isObservationModalOpen}
+                    closeModal={() => setObservationModalOpen(false)}
+                    value={observationValue}
+                    setValue={setObservationValue}
+                    handleSave={() => {
+                        setTarefas(prev =>
+                            prev.map(tarefa =>
+                                tarefa.id === selectedTaskForObservation ? { ...tarefa, observacoes: observationValue } : tarefa
+                            )
+                        );
+                        setObservationModalOpen(false);
+                    }}
+                />
+
                 
                 <TaskModalsContainer 
                     isSelectionModalOpen={isSelectionModalOpen} 
