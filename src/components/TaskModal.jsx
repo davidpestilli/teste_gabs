@@ -13,9 +13,36 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
     const [isSelectionModalOpen, setSelectionModalOpen] = useState(false);
     const [isGroupModalOpen, setGroupModalOpen] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState(null);
-    const [selectedObservationTask, setSelectedObservationTask] = useState(null);
 
-
+    const updateTask = async (taskId, field, value) => {
+        console.log(`Tentando atualizar tarefa ID ${taskId} -> ${field}: ${value}`);
+    
+        // 🔄 Mapear os nomes dos campos corretamente
+        const fieldMap = {
+            "Tarefa": "descricao",
+            "Observações": "observacoes",
+            "Estado": "estado"
+        };
+    
+        const supabaseField = fieldMap[field] || field; // Se não estiver no mapa, usa o nome original
+    
+        const { error } = await supabase
+            .from("tarefas")
+            .update({ [supabaseField]: value })
+            .eq("id", taskId)
+            .select();
+    
+        if (error) {
+            console.error("Erro ao atualizar tarefa:", error);
+        } else {
+            console.log(`Campo ${supabaseField} atualizado com sucesso para ${value}`);
+            fetchTasks(); // 🔄 Atualiza a lista de tarefas para refletir a mudança
+        }
+    };
+    
+    
+    
+    
     useEffect(() => {
         if (isOpen) fetchTasks();
     }, [isOpen]);
@@ -28,40 +55,63 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
         setLoading(false);
     }
 
-        // ✅ Função para salvar a observação no estado de tarefas
-        const handleSaveObservation = () => {
-            setTarefas(prevTarefas =>
-                prevTarefas.map(tarefa =>
-                    tarefa.id === selectedObservationTask
-                        ? { ...tarefa, observacoes: observationValue }
-                        : tarefa
-                )
-            );
+    const handleSaveObservation = async () => {
+        const { error } = await supabase
+            .from("tarefas")
+            .update({ observacoes: observationValue })
+            .eq("id", selectedTaskForObservation);
+    
+        if (error) {
+            console.error("Erro ao salvar observação:", error);
+        } else {
+            fetchTasks(); // 🔹 Atualiza a tabela após salvar no banco
             setObservationModalOpen(false);
-        };
+        }
+    };
+  
+    
+    
 
-    // ✅ Adicionar nova tarefa
     async function addTask() {
-        const numero = tarefas.length + 1;
-        const { error } = await supabase.from("tarefas").insert([{ registro_id: registroId, numero, estado: "Não iniciado" }]);
-
-        if (error) console.error("Erro ao adicionar tarefa:", error);
-        else fetchTasks();
-    }
-
-    // ✅ Excluir tarefas selecionadas
-    async function deleteSelectedTasks() {
-        if (selectedTasks.length === 0) return;
-
-        const { error } = await supabase.from("tarefas").delete().in("id", selectedTasks);
-
-        if (error) console.error("Erro ao excluir tarefas:", error);
-        else {
-            setSelectedTasks([]);
-            fetchTasks();
+        const numero = tarefas.length + 1; // Define o número sequencial da tarefa
+    
+        const { data, error } = await supabase.from("tarefas").insert([
+            {
+                registro_id: registroId, // 🔄 Garante que a tarefa pertence ao registro correto
+                numero: numero, 
+                descricao: "", // 🔄 Inicia com uma descrição vazia
+                estado: "Não iniciado",
+                observacoes: ""
+            }
+        ]).select("*"); // Retorna os dados inseridos para confirmação
+    
+        if (error) {
+            console.error("Erro ao adicionar tarefa:", error);
+        } else {
+            console.log("Tarefa adicionada com sucesso:", data);
+            fetchTasks(); // Atualiza a lista
         }
     }
-
+    
+    async function deleteSelectedTasks() {
+        if (selectedTasks.length === 0) return;
+    
+        console.log("Excluindo tarefas:", selectedTasks);
+    
+        const { error } = await supabase
+            .from("tarefas")
+            .delete()
+            .in("id", selectedTasks);
+    
+        if (error) {
+            console.error("Erro ao excluir tarefas:", error);
+        } else {
+            console.log("Tarefas excluídas com sucesso!");
+            setSelectedTasks([]); // Limpa a seleção após excluir
+            fetchTasks(); // Atualiza a lista de tarefas
+        }
+    }
+    
     const [isObservationModalOpen, setObservationModalOpen] = useState(false);
     const [observationValue, setObservationValue] = useState("");
     const [selectedTaskForObservation, setSelectedTaskForObservation] = useState(null);
@@ -99,9 +149,11 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                     selectedTasks={selectedTasks} 
                     setSelectedTasks={setSelectedTasks} 
                     onTaskClick={(taskId) => {
+                        console.log(`Abrindo seleção de tarefa para ID: ${taskId}`);
                         setSelectedTaskId(taskId);
                         setSelectionModalOpen(true);
                     }}
+                    updateTask={updateTask}
                     openObservationModal={(taskId, observacoes) => {
                         setSelectedTaskForObservation(taskId); // ✅ Define a tarefa correta
                         setObservationValue(observacoes || ""); // ✅ Preenche o campo com o valor atual ou vazio
@@ -109,26 +161,24 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                     }}
                 />
 
-                <div className="flex justify-end gap-2 mt-4">
-                    <button onClick={closeModal} className="bg-gray-400 text-white px-4 py-2 rounded">
+                    <button
+                        onClick={() => {
+                            fetchTasks(); // Recarregar os dados antes de fechar
+                            closeModal();
+                        }}
+                        className="bg-gray-400 text-white px-4 py-2 rounded"
+                    >
                         Fechar
                     </button>
-                </div>
 
-                <TaskObservationModal
-                    isOpen={isObservationModalOpen}
-                    closeModal={() => setObservationModalOpen(false)}
-                    value={observationValue}
-                    setValue={setObservationValue}
-                    handleSave={() => {
-                        setTarefas(prev =>
-                            prev.map(tarefa =>
-                                tarefa.id === selectedTaskForObservation ? { ...tarefa, observacoes: observationValue } : tarefa
-                            )
-                        );
-                        setObservationModalOpen(false);
-                    }}
-                />
+
+                    <TaskObservationModal
+                        isOpen={isObservationModalOpen}
+                        closeModal={() => setObservationModalOpen(false)}
+                        value={observationValue}
+                        setValue={setObservationValue}
+                        handleSave={handleSaveObservation} // ✅ Agora usa a função corretamente
+                    />
 
                 
                 <TaskModalsContainer 
@@ -140,6 +190,7 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                     registroId={registroId} 
                     setTarefas={setTarefas} 
                     selectedTaskId={selectedTaskId}
+                    updateTask={updateTask}
                 />
             </div>
         </div>

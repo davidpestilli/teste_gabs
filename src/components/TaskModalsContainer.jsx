@@ -8,7 +8,8 @@ const TaskModalsContainer = ({
     fetchTasks, 
     registroId, 
     setTarefas, 
-    selectedTaskId 
+    selectedTaskId,
+    updateTask
 }) => {
     return (
         <>
@@ -17,13 +18,19 @@ const TaskModalsContainer = ({
                     closeModal={() => setSelectionModalOpen(false)}
                     onSave={(taskId, taskDescription) => {
                         if (taskId) {
-                            setTarefas((prevTarefas) =>
-                                prevTarefas.map((tarefa) =>
-                                    tarefa.id === selectedTaskId ? { ...tarefa, descricao: taskDescription } : tarefa
-                                )
-                            );
+                            updateTask(taskId, "descricao", taskDescription) // 🚨 Problema: pode não estar atualizando corretamente
+                                .then(() => {
+                                    setTarefas((prevTarefas) =>
+                                        prevTarefas.map((tarefa) =>
+                                            tarefa.id === selectedTaskId
+                                                ? { ...tarefa, descricao: taskDescription }
+                                                : tarefa
+                                        )
+                                    );
+                                });
+                    
+                            setSelectionModalOpen(false);
                         }
-                        setSelectionModalOpen(false);
                     }}
                 />
 

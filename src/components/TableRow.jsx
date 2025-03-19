@@ -13,8 +13,8 @@ const TableRow = ({ registro, updateCell, isSelected, toggleSelection, openTaskM
         setModalOpen(true);
     };
 
-    const handleSave = () => {
-        updateCell(registro.id, column, value);
+    const handleSave = async () => {
+        await updateCell(registro.id, column, value); // ✅ Agora chamamos a função de atualização do Supabase
         setModalOpen(false);
     };
 
@@ -36,10 +36,10 @@ const TableRow = ({ registro, updateCell, isSelected, toggleSelection, openTaskM
                 {registro.tarefas ? "Ver tarefas" : "Verificar"}
             </td>
 
-            {/* Modal para edição de células */}
             <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)} column={column} value={value} setValue={setValue} handleSave={handleSave} />
         </tr>
     );
 };
 
 export default TableRow;
+

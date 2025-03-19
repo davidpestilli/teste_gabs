@@ -40,6 +40,22 @@ const Table = () => {
         }
     }
 
+    async function updateCell(id, column, value) {
+        console.log(`Atualizando ${column} do registro ID ${id} para: ${value}`);
+    
+        const { error } = await supabase
+            .from("registros")
+            .update({ [column]: value })
+            .eq("id", id);
+    
+        if (error) {
+            console.error("Erro ao atualizar registro:", error);
+        } else {
+            console.log("Registro atualizado com sucesso!");
+            carregarDados(); // 🔄 Recarrega os dados para refletir as mudanças
+        }
+    }
+
     const handleRowSelection = (id) => {
         setSelectedRows((prev) =>
             prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
@@ -85,7 +101,7 @@ const Table = () => {
                                 <TableRow
                                     key={registro.id}
                                     registro={registro}
-                                    updateCell={() => {}}
+                                    updateCell={updateCell}  // ✅ Passamos a função para cada linha
                                     isSelected={selectedRows.includes(registro.id)}
                                     toggleSelection={() => handleRowSelection(registro.id)}
                                     openTaskModal={() => openTaskModal(registro.id)} // ✅ Agora está passando corretamente a função
