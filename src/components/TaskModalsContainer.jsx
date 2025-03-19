@@ -1,4 +1,6 @@
 import { TaskSelectionModal, TaskGroupModal } from "./TaskManagementModals";
+import { supabase } from "../services/supabaseClient";
+
 
 const TaskModalsContainer = ({ 
     isSelectionModalOpen, 
@@ -18,20 +20,27 @@ const TaskModalsContainer = ({
                     closeModal={() => setSelectionModalOpen(false)}
                     onSave={(taskId, taskDescription) => {
                         if (taskId) {
-                            updateTask(taskId, "descricao", taskDescription) // 🚨 Problema: pode não estar atualizando corretamente
-                                .then(() => {
-                                    setTarefas((prevTarefas) =>
-                                        prevTarefas.map((tarefa) =>
-                                            tarefa.id === selectedTaskId
-                                                ? { ...tarefa, descricao: taskDescription }
-                                                : tarefa
-                                        )
-                                    );
-                                });
+                            // Atualiza o estado local
+                            setTarefas((prevTarefas) =>
+                                prevTarefas.map((tarefa) =>
+                                    tarefa.id === selectedTaskId ? { ...tarefa, descricao: taskDescription } : tarefa
+                                )
+                            );
                     
-                            setSelectionModalOpen(false);
+                            // Persiste a alteração no banco de dados
+                            supabase
+                              .from("tarefas")
+                              .update({ descricao: taskDescription })
+                              .eq("id", selectedTaskId)
+                              .then(({ error }) => {
+                                  if (error) {
+                                      console.error("Erro ao atualizar tarefa:", error);
+                                  }
+                              });
                         }
+                        setSelectionModalOpen(false);
                     }}
+                    
                 />
 
 
