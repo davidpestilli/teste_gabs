@@ -15,6 +15,10 @@ const Table = () => {
   const [isTaskModalOpen, setTaskModalOpen] = useState(false);
   const [currentTaskRegistroId, setCurrentTaskRegistroId] = useState(null);
 
+    // Estados para o filtro
+    const [filtroAssessor, setFiltroAssessor] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+
   useEffect(() => {
     carregarDados();
   }, []);
@@ -70,9 +74,94 @@ const Table = () => {
     setTaskModalOpen(true);
   };
 
+    // Funções para o filtro de assessor
+    const handleFilterChange = (e) => {
+        const value = e.target.value;
+        setFiltroAssessor(value);
+        if (value.length >= 2) {
+          fetchAssessorSuggestions(value);
+        } else {
+          setSuggestions([]);
+        }
+      };
+
+      async function fetchAssessorSuggestions(value) {
+        const { data, error } = await supabase
+          .from("registros")
+          .select("assessor")
+          .ilike("assessor", `%${value}%`);
+        if (error) {
+          console.error("Erro ao buscar sugestões:", error);
+        } else {
+          const uniqueNames = [...new Set(data.map(item => item.assessor).filter(Boolean))];
+          setSuggestions(uniqueNames);
+        }
+      }
+    
+      const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          applyFilter();
+        }
+      };
+    
+      async function applyFilter() {
+        const { data, error } = await supabase
+          .from("registros")
+          .select("*")
+          .ilike("assessor", `%${filtroAssessor}%`);
+        if (error) {
+          console.error("Erro ao filtrar dados:", error);
+        } else {
+          setDados(data);
+          setSuggestions([]);
+        }
+      }
+    
+      const handleSuggestionClick = (suggestion) => {
+        setFiltroAssessor(suggestion);
+        setSuggestions([]);
+        applyFilter();
+      };
+    
+      const clearFilter = () => {
+        setFiltroAssessor("");
+        carregarDados();
+      };
+
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Testes pelos Gabinetes</h2>
+
+            {/* Caixa de filtro para o assessor */}
+            <div className="mb-4 relative">
+        <input
+          type="text"
+          placeholder="Filtrar por Assessor"
+          className="border p-2 w-full"
+          value={filtroAssessor}
+          onChange={handleFilterChange}
+          onKeyDown={handleKeyDown}
+        />
+        {suggestions.length > 0 && (
+          <ul className="absolute bg-white border w-full z-10">
+            {suggestions.map((suggestion) => (
+              <li
+                key={suggestion}
+                className="p-2 hover:bg-gray-200 cursor-pointer"
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
+        {filtroAssessor && (
+          <button onClick={clearFilter} className="mt-2 text-sm text-blue-500">
+            Limpar filtro
+          </button>
+        )}
+      </div>
 
       <div className="flex gap-4 mb-4">
         <TaskActions
