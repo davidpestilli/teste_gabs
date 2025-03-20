@@ -1,10 +1,26 @@
 const TaskTable = ({ tarefas, loading, updateTask, openObservationModal, selectedTasks, setSelectedTasks, onTaskClick }) => {
+
+    const handleSelectAllTasks = () => {
+        if (selectedTasks.length === tarefas.length) {
+          setSelectedTasks([]);
+        } else {
+          const allIds = tarefas.map(tarefa => tarefa.id);
+          setSelectedTasks(allIds);
+        }
+      };
+
     return (
         <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">Selecionar</th>
+                        <th className="border px-4 py-4 flex justify-start items-center">
+                            <input 
+                                type="checkbox"
+                                onChange={handleSelectAllTasks}
+                                checked={selectedTasks.length === tarefas.length && tarefas.length > 0}
+                            />
+                        </th>
                         <th className="border px-4 py-2">#</th>
                         <th className="border px-4 py-2">Tarefa</th>
                         <th className="border px-4 py-2">Estado</th>

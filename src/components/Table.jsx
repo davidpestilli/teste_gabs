@@ -25,7 +25,7 @@ const Table = () => {
 
   async function carregarDados() {
     setLoading(true);
-    let { data, error } = await supabase.from("registros").select("*");
+    let { data, error } = await supabase.from("registros").select("*, tarefas(*)");
     if (error) console.error("Erro ao buscar dados:", error);
     else setDados(data);
     setLoading(false);
@@ -68,6 +68,16 @@ const Table = () => {
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
     );
   };
+
+    // Função para selecionar/deselecionar todas as linhas
+    const handleSelectAll = () => {
+      if (selectedRows.length === dados.length) {
+        setSelectedRows([]);
+      } else {
+        const allIds = dados.map((registro) => registro.id);
+        setSelectedRows(allIds);
+      }
+    };
 
   const openTaskModal = (registroId) => {
     setCurrentTaskRegistroId(registroId);
@@ -186,7 +196,13 @@ const Table = () => {
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border px-4 py-2">Selecionar</th>
+              <th className="border px-4 py-4 flex justify-start items-center">
+                <input 
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                  checked={selectedRows.length === dados.length && dados.length > 0}
+                />
+                </th>
                 <th className="border px-4 py-2">Assessor</th>
                 <th className="border px-4 py-2">Gabinete de Lotação</th>
                 <th className="border px-4 py-2">Processos</th>
