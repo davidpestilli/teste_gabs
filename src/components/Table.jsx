@@ -41,13 +41,16 @@ const Table = () => {
 
   async function deleteRows() {
     if (selectedRows.length === 0) return;
+    if (!window.confirm("Tem certeza que deseja excluir os processos selecionados?")) return;
+
     const { error } = await supabase.from("registros").delete().in("id", selectedRows);
     if (error) console.error("Erro ao excluir linhas:", error);
     else {
-      setSelectedRows([]);
-      carregarDados();
+        setSelectedRows([]);
+        carregarDados();
     }
-  }
+}
+
 
   async function updateCell(id, column, value) {
     console.log(`Atualizando ${column} do registro ID ${id} para: ${value}`);

@@ -95,22 +95,16 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
     
     async function deleteSelectedTasks() {
         if (selectedTasks.length === 0) return;
+        if (!window.confirm("Tem certeza que deseja excluir os processos selecionados?")) return;
     
-        console.log("Excluindo tarefas:", selectedTasks);
-    
-        const { error } = await supabase
-            .from("tarefas")
-            .delete()
-            .in("id", selectedTasks);
-    
-        if (error) {
-            console.error("Erro ao excluir tarefas:", error);
-        } else {
-            console.log("Tarefas excluídas com sucesso!");
-            setSelectedTasks([]); // Limpa a seleção após excluir
-            fetchTasks(); // Atualiza a lista de tarefas
+        const { error } = await supabase.from("tarefas").delete().in("id", selectedTasks);
+        if (error) console.error("Erro ao excluir tarefas:", error);
+        else {
+            setSelectedTasks([]);
+            fetchTasks();
         }
     }
+    
     
     const [isObservationModalOpen, setObservationModalOpen] = useState(false);
     const [observationValue, setObservationValue] = useState("");
@@ -162,10 +156,7 @@ const TaskModal = ({ isOpen, closeModal, registroId }) => {
                 />
 
                     <button
-                        onClick={() => {
-                            fetchTasks(); // Recarregar os dados antes de fechar
-                            closeModal();
-                        }}
+                        onClick={() => window.location.reload()}
                         className="bg-gray-400 text-white px-4 py-2 rounded"
                     >
                         Fechar
