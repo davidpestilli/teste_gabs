@@ -26,7 +26,7 @@ const TaskSelectionModal = ({ isOpen, closeModal, onSave }) => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[1300px] h-[80vh]">   
                 <h2 className="text-xl font-bold mb-4">Selecionar Tarefa</h2>
-                <div className="overflow-y-auto max-h-[600px]">
+                <div className="overflow-y-auto max-h-[480px]">
                     <table className="w-full border-collapse border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100">
