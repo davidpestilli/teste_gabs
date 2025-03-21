@@ -148,7 +148,7 @@ const Table = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Testes pelos Gabinetes</h2>
+      <h2 className="text-2xl font-bold mb-4">Gerenciador de Testes</h2>
 
             {/* Caixa de filtro para o assessor */}
             <div className="mb-4 relative">
@@ -180,6 +180,7 @@ const Table = () => {
         )}
       </div>
 
+      <div className="flex items-center justify-between mb-4">
       <div className="flex gap-4 mb-4">
         <TaskActions
           addTask={addRow}
@@ -196,81 +197,67 @@ const Table = () => {
         </button>
       </div>
 
-              <div className="flex items-center gap-2 ml-4">
+          {/* Ícones modernos alinhados ao lado */}
+          <div className="flex items-center gap-2 relative -top-4">
+            {/* Companion App */}
+            <div className="relative group">
+              <a href="https://davidpestilli.github.io/sessao_julgamento/" target="_blank" rel="noopener noreferrer">
+                <button className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
+                  {/* Ícone de computador */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 21h6l-.75-4M3 7h18M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7" />
+                  </svg>
+                </button>
+              </a>
+              <span className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                Fluxo Geral da Sessão de Julgamento
+              </span>
+            </div>
+            
+            {/* Relatar Bugs */}
+            <div className="relative group">
+              <a href="https://tjsp.sharepoint.com/teams/GRP_SJ7/_layouts/15/listforms.aspx?cid=MWRmMjhkMmUtNzg1NS00ZmM5LWEyNzQtNWY0OWUyYWNiNTAy&nav=OGUxZWZhOTMtZTI4MS00NTYzLWE3NzEtNzE3OWMxNWE3MjI0" target="_blank" rel="noopener noreferrer">
+                <button className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
+                  {/* Ícone de bug */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13 2v2h3.09a8.001 8.001 0 010 16H13v2h-2v-2H7.91a8.001 8.001 0 010-16H11V2h2zM12 4c-2.21 0-4 1.79-4 4h8c0-2.21-1.79-4-4-4zm0 16c2.21 0 4-1.79 4-4H8c0 2.21 1.79 4 4 4z"/>
+                  </svg>
+                </button>
+              </a>
+              <span className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+                Relatar Bugs
+              </span>
+            </div>
+            {/* Contato Dev */}
+            <div className="relative group">
+              <button onClick={() => setDevModalOpen(true)} className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
+                {/* Ícone de contato (usuário) */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>
+              <span className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+                Contato
+              </span>
+            </div>
 
-          <div className="relative group">
-            <a href="https://companion.example.com" target="_blank" rel="noopener noreferrer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 21h6l-.75-4M3 7h18M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7" />
-              </svg>
-            </a>
-            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-              Companion App
-            </span>
-          </div>
-
-
-          <div className="relative group">
-            <a href="https://bugs.example.com" target="_blank" rel="noopener noreferrer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M13 2v2h3.09a8.001 8.001 0 010 16H13v2h-2v-2H7.91a8.001 8.001 0 010-16H11V2h2zM12 4c-2.21 0-4 1.79-4 4h8c0-2.21-1.79-4-4-4zm0 16c2.21 0 4-1.79 4-4H8c0 2.21 1.79 4 4 4z"/>
-              </svg>
-            </a>
-            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-              Relatar Bugs
-            </span>
-          </div>
-
-
-          <div className="relative group">
-            <button onClick={() => setDevModalOpen(true)}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-              </svg>
-            </button>
-            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-              Contato Dev
-            </span>
-          </div>
-
- 
-          <div className="relative group">
-            <a href="" target="_blank" rel="noopener noreferrer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </a>
-            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-              ChatGPT 1
-            </span>
-          </div>
-
-
-          <div className="relative group">
-            <a href="" target="_blank" rel="noopener noreferrer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </a>
-            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-              ChatGPT 2
-            </span>
-          </div>
-
-
-          <div className="relative group">
-            <a href="/manual.pdf" target="_blank" rel="noopener noreferrer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 20l9-5-9-5-9 5 9 5z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 12l9-5-9-5-9 5 9 5z" />
-              </svg>
-            </a>
-            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-              Manual
-            </span>
+            {/* Manual */}
+            <div className="relative group">
+              <a href="/manual.pdf" target="_blank" rel="noopener noreferrer">
+                <button className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
+                  {/* Ícone de manual (documento) */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20l9-5-9-5-9 5 9 5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12l9-5-9-5-9 5 9 5z" />
+                  </svg>
+                </button>
+              </a>
+              <span className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+                Manual
+              </span>
+            </div>
           </div>
         </div>
-
 
       {loading ? (
         <p className="text-center">Carregando...</p>
