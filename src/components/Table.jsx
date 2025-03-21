@@ -5,6 +5,7 @@ import TaskActions from "./TaskActions";
 import ReportModal from "./ReportModal"; // Modal para relatórios
 import TaskModal from "./TaskModal";
 import AddAssessorModal from "./AddAssessorModal"; // Novo modal para adicionar assessor com processos
+import DevContactModal from "./DevContactModal"; // Importa o modal de contato
 
 const Table = () => {
   const [dados, setDados] = useState([]);
@@ -14,6 +15,9 @@ const Table = () => {
   const [isAddAssessorModalOpen, setAddAssessorModalOpen] = useState(false);
   const [isTaskModalOpen, setTaskModalOpen] = useState(false);
   const [currentTaskRegistroId, setCurrentTaskRegistroId] = useState(null);
+
+    // Novo estado para o modal de contato com os devs
+    const [isDevModalOpen, setDevModalOpen] = useState(false);
 
     // Estados para o filtro
     const [filtroAssessor, setFiltroAssessor] = useState("");
@@ -183,7 +187,7 @@ const Table = () => {
           selectedTasks={selectedRows}
           setReportModalOpen={setReportModalOpen}
         />
-        {/* Botão para abrir o modal de adicionar assessor com processos */}
+ 
         <button
           onClick={() => setAddAssessorModalOpen(true)}
           className="bg-purple-500 text-white px-4 py-2 rounded whitespace-nowrap h-10"
@@ -191,6 +195,82 @@ const Table = () => {
           Adicionar Assessor com Processos
         </button>
       </div>
+
+              <div className="flex items-center gap-2 ml-4">
+
+          <div className="relative group">
+            <a href="https://companion.example.com" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 21h6l-.75-4M3 7h18M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7" />
+              </svg>
+            </a>
+            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+              Companion App
+            </span>
+          </div>
+
+
+          <div className="relative group">
+            <a href="https://bugs.example.com" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 2v2h3.09a8.001 8.001 0 010 16H13v2h-2v-2H7.91a8.001 8.001 0 010-16H11V2h2zM12 4c-2.21 0-4 1.79-4 4h8c0-2.21-1.79-4-4-4zm0 16c2.21 0 4-1.79 4-4H8c0 2.21 1.79 4 4 4z"/>
+              </svg>
+            </a>
+            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+              Relatar Bugs
+            </span>
+          </div>
+
+
+          <div className="relative group">
+            <button onClick={() => setDevModalOpen(true)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </button>
+            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+              Contato Dev
+            </span>
+          </div>
+
+ 
+          <div className="relative group">
+            <a href="" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </a>
+            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+              ChatGPT 1
+            </span>
+          </div>
+
+
+          <div className="relative group">
+            <a href="" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </a>
+            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+              ChatGPT 2
+            </span>
+          </div>
+
+
+          <div className="relative group">
+            <a href="/manual.pdf" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 20l9-5-9-5-9 5 9 5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 12l9-5-9-5-9 5 9 5z" />
+              </svg>
+            </a>
+            <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
+              Manual
+            </span>
+          </div>
+        </div>
+
 
       {loading ? (
         <p className="text-center">Carregando...</p>
@@ -251,6 +331,8 @@ const Table = () => {
           refreshData={carregarDados}
         />
       )}
+            {/* Modal de contato com os desenvolvedores */}
+            <DevContactModal isOpen={isDevModalOpen} closeModal={() => setDevModalOpen(false)} />
     </div>
   );
 };
