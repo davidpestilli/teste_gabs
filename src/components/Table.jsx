@@ -6,6 +6,7 @@ import ReportModal from "./ReportModal"; // Modal para relatórios
 import TaskModal from "./TaskModal";
 import AddAssessorModal from "./AddAssessorModal"; // Novo modal para adicionar assessor com processos
 import DevContactModal from "./DevContactModal"; // Importa o modal de contato
+import LoginSenhaModal from "./LoginSenhaModal";
 
 const Table = () => {
   const [dados, setDados] = useState([]);
@@ -15,6 +16,7 @@ const Table = () => {
   const [isAddAssessorModalOpen, setAddAssessorModalOpen] = useState(false);
   const [isTaskModalOpen, setTaskModalOpen] = useState(false);
   const [currentTaskRegistroId, setCurrentTaskRegistroId] = useState(null);
+  const [isLoginSenhaModalOpen, setLoginSenhaModalOpen] = useState(false);
 
     // Novo estado para o modal de contato com os devs
     const [isDevModalOpen, setDevModalOpen] = useState(false);
@@ -199,6 +201,25 @@ const Table = () => {
 
           {/* Ícones modernos alinhados ao lado */}
           <div className="flex items-center gap-2 relative -top-4">
+
+            {/* Ícone Login e Senha */}
+            <div className="relative group">
+              <button
+                onClick={() => setLoginSenhaModalOpen(true)}
+                className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition"
+              >
+                {/* Ícone de cadeado para simbolizar login/senha */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c.552 0 1-.448 1-1V7a1 1 0 10-2 0v3c0 .552.448 1 1 1z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11V7a7 7 0 0114 0v4M5 11h14a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2z" />
+                </svg>
+              </button>
+              <span className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                Login e Senha de Magistrados
+              </span>
+            </div>
+
+
             {/* Companion App */}
             <div className="relative group">
               <a href="https://davidpestilli.github.io/sessao_julgamento/" target="_blank" rel="noopener noreferrer">
@@ -243,7 +264,7 @@ const Table = () => {
 
             {/* Manual */}
             <div className="relative group">
-              <a href="/manual.pdf" target="_blank" rel="noopener noreferrer">
+              <a href="https://tjsp.sharepoint.com/:b:/t/GRP_SJ7/EW3QwWcEuTpPpAy20Qhno_QBeGDJO7_8Ht4pXRiIe7BSUQ?e=t1x7Br" target="_blank" rel="noopener noreferrer">
                 <button className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
                   {/* Ícone de manual (documento) */}
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -317,7 +338,14 @@ const Table = () => {
           closeModal={() => setAddAssessorModalOpen(false)}
           refreshData={carregarDados}
         />
+        
       )}
+
+            <LoginSenhaModal 
+              isOpen={isLoginSenhaModalOpen} 
+              closeModal={() => setLoginSenhaModalOpen(false)} 
+            />
+
             {/* Modal de contato com os desenvolvedores */}
             <DevContactModal isOpen={isDevModalOpen} closeModal={() => setDevModalOpen(false)} />
     </div>
