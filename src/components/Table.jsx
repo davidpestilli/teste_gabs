@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 import TableRow from "./TableRow";
 import TaskActions from "./TaskActions";
-import ReportModal from "./ReportModal"; // Modal para relatórios
+import ReportModal from "./ReportModal"; 
 import TaskModal from "./TaskModal";
-import AddAssessorModal from "./AddAssessorModal"; // Novo modal para adicionar assessor com processos
-import DevContactModal from "./DevContactModal"; // Importa o modal de contato
+import AddAssessorModal from "./AddAssessorModal"; 
+import DevContactModal from "./DevContactModal"; 
 import LoginSenhaModal from "./LoginSenhaModal";
+import WebInfoModal from "./WebInfoModal";
 
 const Table = () => {
   const [dados, setDados] = useState([]);
@@ -17,6 +18,7 @@ const Table = () => {
   const [isTaskModalOpen, setTaskModalOpen] = useState(false);
   const [currentTaskRegistroId, setCurrentTaskRegistroId] = useState(null);
   const [isLoginSenhaModalOpen, setLoginSenhaModalOpen] = useState(false);
+  const [isWebInfoModalOpen, setWebInfoModalOpen] = useState(false);
 
     // Novo estado para o modal de contato com os devs
     const [isDevModalOpen, setDevModalOpen] = useState(false);
@@ -184,6 +186,7 @@ const Table = () => {
 
       <div className="flex items-center justify-between mb-4">
       <div className="flex gap-4 mb-4">
+
         <TaskActions
           addTask={addRow}
           deleteSelectedTasks={deleteRows}
@@ -201,6 +204,22 @@ const Table = () => {
 
           {/* Ícones modernos alinhados ao lado */}
           <div className="flex items-center gap-2 relative -top-4">
+
+          {/* Ícone World Wide Web */}
+          <div className="relative group">
+            <button
+              onClick={() => setWebInfoModalOpen(true)}
+              className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition"
+            >
+              {/* Ícone de globo para representar a web */}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a10 10 0 100 20 10 10 0 000-20z M2 12h20" />
+              </svg>
+            </button>
+            <span className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+              Portal, login e senha
+            </span>
+          </div>
 
             {/* Ícone Login e Senha */}
             <div className="relative group">
@@ -341,13 +360,22 @@ const Table = () => {
         
       )}
 
-            <LoginSenhaModal 
-              isOpen={isLoginSenhaModalOpen} 
-              closeModal={() => setLoginSenhaModalOpen(false)} 
-            />
+      <LoginSenhaModal 
+      isOpen={isLoginSenhaModalOpen} 
+      closeModal={() => setLoginSenhaModalOpen(false)} 
+      />
 
-            {/* Modal de contato com os desenvolvedores */}
-            <DevContactModal isOpen={isDevModalOpen} closeModal={() => setDevModalOpen(false)} />
+
+      <DevContactModal isOpen={isDevModalOpen} 
+      closeModal={() => setDevModalOpen(false)} 
+      />
+    
+      
+      <WebInfoModal 
+        isOpen={isWebInfoModalOpen} 
+        closeModal={() => setWebInfoModalOpen(false)} 
+      />
+
     </div>
   );
 };

@@ -23,7 +23,7 @@ const TaskTable = ({ tarefas, loading, updateTask, openObservationModal, selecte
                         </th>
                         <th className="border px-4 py-2">#</th>
                         <th className="border px-4 py-2">Tarefa</th>
-                        <th className="border px-4 py-2">Estado</th>
+                        <th className="border px-4 py-2">Status do Serviço</th>
                         <th className="border px-4 py-2">Observações</th>
                     </tr>
                 </thead>
