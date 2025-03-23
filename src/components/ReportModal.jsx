@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { supabase } from "../services/supabaseClient";
 import PercentageReport from "./PercentageReport";
+import exportUnifiedReportToExcel from "./exportUnifiedReportToExcel";
 
 const ReportModal = ({ isOpen, closeModal }) => {
   const [reportData, setReportData] = useState([]);
@@ -141,12 +142,21 @@ const ReportModal = ({ isOpen, closeModal }) => {
           <option value="percentual_de_finalizados">Percentual de Finalizados</option>
         </select>
 
-        <button
-          onClick={fetchReport}
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-        >
-          Gerar Relatório
-        </button>
+        <div className="flex gap-4 mb-4">
+          <button
+            onClick={fetchReport}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Gerar Relatório na Janela
+          </button>
+          <button
+            onClick={exportUnifiedReportToExcel}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Gerar Relatório Geral em Excel
+          </button>
+        </div>
+
 
         {/* Exibe a contagem, mantendo o comportamento antigo */}
         {totalTasksCount > 0 && reportType !== "percentual_de_iniciados" && reportType !== "percentual_de_finalizados" && (
