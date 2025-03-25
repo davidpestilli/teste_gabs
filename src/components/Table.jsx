@@ -129,7 +129,7 @@ const Table = () => {
       async function applyFilter() {
         const { data, error } = await supabase
           .from("registros")
-          .select("*")
+          .select("*, tarefas(*)")
           .ilike("assessor", `%${filtroAssessor}%`);
         if (error) {
           console.error("Erro ao filtrar dados:", error);
